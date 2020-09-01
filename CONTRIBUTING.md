@@ -22,13 +22,19 @@ Tasks related to a common feature are linked to a story describing the feature.
 
 Bugs should be fixed before new features are added to the product.
 
+## Definition of done
+
+Code under review should be tested.
+
+Installation instructions should always be up to date. If a task changes how to install the product, the documentation should be updated at the same time.
+
 ## Branching
 
 Each task is implemented on a separate branch named `<contributor>-<task name>` (e.g. `bouchra-contributing`).
 
 Changes are integrated to the branch `master` after the following steps:
 
-* another member of the development team approved a code review ;
+* another member of the development team approved a code review (if the change is important, each member should approve) ;
 * the tests are passing ;
 * the branch has been rebased on the branch `master`.
 
