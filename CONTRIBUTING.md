@@ -21,3 +21,15 @@ Developers are assigned tasks. Tasks should be as small as possible. The amount 
 Tasks related to a common feature are linked to a story describing the feature.
 
 Bugs should be fixed before new features are added to the product.
+
+## Branching
+
+Each task is implemented on a separate branch named `<contributor>-<task name>` (e.g. `bouchra-contributing`).
+
+Changes are integrated to the branch `master` after the following steps:
+
+* another member of the development team approved a code review ;
+* the tests are passing ;
+* the branch has been rebased on the branch `master`.
+
+See https://medium.com/faun/how-to-rebase-and-merge-with-git-a9c29b2172ad.
