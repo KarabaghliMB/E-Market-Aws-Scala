@@ -28,6 +28,8 @@ Code under review should be tested.
 
 Installation instructions should always be up to date. If a task changes how to install the product, the documentation should be updated at the same time.
 
+Bugs and new features should be described briefly in `CHANGELOG.md`.
+
 ## Branching
 
 Each task is implemented on a separate branch named `<contributor>-<task name>` (e.g. `bouchra-contributing`).
