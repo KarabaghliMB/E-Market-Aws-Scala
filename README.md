@@ -6,4 +6,16 @@ Online shopping is not original at all but it has a rich domain with interesting
 
 ## Install instructions
 
-Nothing for the moment...
+Make sure you have scala installed.
+
+## Run the tests
+
+```
+sbt test
+```
+
+## Run the software
+
+```
+sbt run
+```
