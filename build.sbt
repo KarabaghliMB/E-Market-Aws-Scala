@@ -7,4 +7,8 @@ lazy val root = (project in file(".")).
     name := "poca-2020"
   )
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % Test
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "3.1.0" % Test,
+  "com.typesafe.akka" %% "akka-stream" % "2.6.8",
+  "com.typesafe.akka" %% "akka-http" % "10.2.0"
+)
