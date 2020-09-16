@@ -11,8 +11,18 @@ Make sure you have scala installed.
 ## Run the tests
 
 ```
-sbt test
+sbt clean coverage test
 ```
+
+## Generate coverage report
+
+After running the tests:
+
+```
+sbt coverageReport
+```
+
+Then look at [target/scala-2.13/scoverage-report/index.html](target/scala-2.13/scoverage-report/index.html) for the HTML report.
 
 ## Run the software
 
