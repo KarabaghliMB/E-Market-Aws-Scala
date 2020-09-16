@@ -8,13 +8,7 @@ before_script:
   - apt-get install apt-transport-https -y
   ## Install SBT
   - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - curl http://google.com
-  - echo $HTTP_PROXY
-  - echo $HTTPS_PROXY
   - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$HTTP_PROXY --recv 642AC823
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 642AC823
-  - gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 642AC823
   - apt-get update -y
   - apt-get install sbt -y
   - sbt sbtVersion  ## perint installed version
