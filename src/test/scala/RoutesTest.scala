@@ -15,14 +15,16 @@ class RoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest {
     override def createActorSystem(): akka.actor.ActorSystem =
         testKit.system.classicSystem
 
+    val routesUnderTest = Routes.routes
+
     test("Route GET /hello should say hello") {
         val request = HttpRequest(uri = "/hello")
-        request ~> routes ~> check {
+        request ~> routesUnderTest ~> check {
             status should ===(StatusCodes.OK)
 
-            contentType should ===(ContentTypes.`application/json`)
+            contentType should ===(ContentTypes.`text/html(UTF-8)`)
 
-            entityAs[String] should ===("""Hello mate!""")
+            entityAs[String] should ===("<h1>Say hello to akka-http</h1>")
         }
     }
 }
