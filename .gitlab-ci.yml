@@ -11,7 +11,7 @@ before_script:
   - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$HTTP_PROXY --recv 642AC823
   - apt-get update -y
   - apt-get install sbt -y
-  - sbt sbtVersion  ## perint installed version
+  - sbt sbtVersion  ## print installed version
 
 test:
   stage: test
