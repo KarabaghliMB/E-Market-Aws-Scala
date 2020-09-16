@@ -17,6 +17,3 @@ test:
   stage: test
   script:
     - sbt clean coverage test coverageReport
-  artifacts:
-    reports:
-      cobertura: /builds/michelbl/poca-2020/target/scala-2.13/coverage-report/cobertura.xml
