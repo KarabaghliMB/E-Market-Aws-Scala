@@ -5,7 +5,7 @@ import akka.http.scaladsl.Http
 
 import scala.io.StdIn
 
-object HttpServerRoutingMinimal {
+object AppHttpServer {
 
     def main(args: Array[String]): Unit = {
 
