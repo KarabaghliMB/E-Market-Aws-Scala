@@ -31,8 +31,14 @@ Make sure Docker is installed locally.
 sbt docker:publishLocal
 ```
 
-Then the image is listed:
+Then the image with name `poca-2020` and tag `0.1.0-SNAPSHOT` is listed:
 
 ```
 docker image ls
+```
+
+To remove old images:
+
+```
+docker image prune
 ```
