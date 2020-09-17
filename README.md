@@ -37,6 +37,12 @@ Then the image with name `poca-2020` and tag `0.1.0-SNAPSHOT` is listed:
 docker image ls
 ```
 
+Run the docker image locally:
+
+```
+docker run poca-2020:0.1.0-SNAPSHOT
+```
+
 To remove old images:
 
 ```
