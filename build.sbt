@@ -1,3 +1,7 @@
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(DockerPlugin)
+
 lazy val root = (project in file(".")).
   settings(
     inThisBuild(List(
@@ -15,3 +19,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-testkit" % "10.2.0",
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.6.8",
 )
+
+dockerExposedPorts ++= Seq(8080)
+//dockerRepository = "[repository.host[:repository.port]]"
+//dockerUsername = ""

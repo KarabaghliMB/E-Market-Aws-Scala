@@ -6,26 +6,33 @@ Online shopping is not original at all but it has a rich domain with interesting
 
 ## Install instructions
 
-Make sure you have scala installed.
+Make sure you have scala and sbt installed.
 
 ## Run the tests
 
 ```
-sbt clean coverage test
+sbt clean coverage test coverageReport
 ```
 
-## Generate coverage report
+This also creates a coverage report at [target/scala-2.13/scoverage-report/index.html](target/scala-2.13/scoverage-report/index.html).
 
-After running the tests:
-
-```
-sbt coverageReport
-```
-
-Then look at [target/scala-2.13/scoverage-report/index.html](target/scala-2.13/scoverage-report/index.html) for the HTML report.
 
 ## Run the software
 
 ```
 sbt run
+```
+
+## Package to a Docker image
+
+Make sure Docker is installed locally.
+
+```
+sbt docker:publishLocal
+```
+
+Then the image is listed:
+
+```
+docker image ls
 ```
