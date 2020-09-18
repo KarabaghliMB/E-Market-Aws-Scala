@@ -1,19 +1,18 @@
 image: alpine:latest
 
 stages:
-# - test
+  - test
   - build-dockerfile
   - build-dockerimage
 
-#before_script:
-#  - apk add openjdk11
-#  - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-#  - sbt sbtVersion  ## print installed version
+before_script:
 
-#test:
-#  stage: test
-#  script:
-#    - sbt clean coverage test coverageReport
+test:
+  stage: test
+  script:
+    - apk add openjdk11
+    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+    - sbt clean coverage test coverageReport
 
 build-dockerfile:
   stage: build-dockerfile
@@ -26,14 +25,14 @@ build-dockerfile:
     paths:
       - target/docker/stage
     expire_in: 1 hour
+  only:
+    refs:
+      - master
 
 build-dockerimage:
   stage: build-dockerimage
   image:
-    name: gcr.io/kaniko-project/executor:debug
-    #mgit/base:kaniko-executor-debug-stable
-    #gcr.io/kaniko-project/executor:debug-v0.16.0
-    #gcr.io/kaniko-project/executor:debug  # see https://docs.gitlab.com/ce/ci/docker/using_kaniko.html
+    name: gcr.io/kaniko-project/executor:debug  # see https://docs.gitlab.com/ce/ci/docker/using_kaniko.html
     entrypoint: [""]
   script:
     # With vanilla docker you would be using:
@@ -41,3 +40,6 @@ build-dockerimage:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"https://index.docker.io/v2/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context target/docker/stage --dockerfile target/docker/stage/Dockerfile --destination poca/poca-2020:latest
+  only:
+    refs:
+      - master
