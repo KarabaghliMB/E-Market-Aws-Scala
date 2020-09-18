@@ -2,6 +2,7 @@ image: openjdk:11
 
 stages:
   - test
+  - build
 
 before_script:
   - apt-get update -y
@@ -17,3 +18,8 @@ test:
   stage: test
   script:
     - sbt clean coverage test coverageReport
+
+build:
+  stage: build
+  script:
+    - sbt docker:stage
