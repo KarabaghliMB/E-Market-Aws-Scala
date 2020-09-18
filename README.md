@@ -19,6 +19,13 @@ This also creates a coverage report at [target/scala-2.13/scoverage-report/index
 
 ## Run the software
 
+From Docker Hub:
+
+```
+docker run poca/poca-2020:latest
+```
+
+From the local directory:
 ```
 sbt run
 ```
