@@ -1,6 +1,7 @@
 image: docker:19.03.13-dind
 
-stages:  # - test
+stages:
+# - test
   - build
 
 before_script:
@@ -8,12 +9,13 @@ before_script:
   - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
   - sbt sbtVersion  ## print installed version
 
-test:
-  stage: test
-  script:
-    - sbt clean coverage test coverageReport
+#test:
+#  stage: test
+#  script:
+#    - sbt clean coverage test coverageReport
 
 build:
   stage: build
   script:
-    - docker image ls  #- sbt docker:stage
+    - docker image ls
+    #- sbt docker:stage
