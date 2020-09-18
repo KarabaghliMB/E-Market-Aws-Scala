@@ -23,5 +23,6 @@ libraryDependencies ++= Seq(
 )
 
 dockerExposedPorts ++= Seq(8080)
+dockerUpdateLatest := true
 //dockerRepository = "[repository.host[:repository.port]]"
 //dockerUsername = ""

@@ -31,7 +31,7 @@ Make sure Docker is installed locally.
 sbt docker:publishLocal
 ```
 
-Then the image with name `poca-2020` and tag `0.1.0-SNAPSHOT` is listed:
+Then the image with name `poca-2020` and tag `latest` is listed. (There is also an image `poca-2020:0.1.0-SNAPSHOT` that is identical).
 
 ```
 docker image ls
@@ -40,7 +40,7 @@ docker image ls
 Run the docker image locally:
 
 ```
-docker run -p 8080:8080 poca-2020:0.1.0-SNAPSHOT
+docker run -p 8080:8080 poca-2020:latest
 ```
 
 To remove old images:
