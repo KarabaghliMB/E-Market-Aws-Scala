@@ -20,5 +20,5 @@ stages:
 build:
   stage: build
   script:
-    - DOCKER_HOST=tcp://docker:2375 docker info
+    - HTTP_PROXY= HTTPS_PROXY= DOCKER_HOST=tcp://docker:2375 docker info
     #- sbt docker:stage
