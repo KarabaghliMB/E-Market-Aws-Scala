@@ -7,10 +7,10 @@ stages:
 # - test
   - build
 
-before_script:
-  - apk add openjdk11
-  - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-  - sbt sbtVersion  ## print installed version
+#before_script:
+#  - apk add openjdk11
+#  - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+#  - sbt sbtVersion  ## print installed version
 
 #test:
 #  stage: test
@@ -20,5 +20,5 @@ before_script:
 build:
   stage: build
   script:
-    - docker image ls
+    - DOCKER_HOST=tcp://docker:2375 docker info
     #- sbt docker:stage
