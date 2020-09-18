@@ -14,7 +14,7 @@ object AppHttpServer extends LazyLogging {
         implicit val system = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
         implicit val executionContext = system.executionContext
 
-        val bindingFuture = Http().newServerAt("localhost", 8080).bind(Routes.routes)
+        val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(Routes.routes)
 
         val serverStartedFuture = bindingFuture.map(binding => {
             val address = binding.localAddress
