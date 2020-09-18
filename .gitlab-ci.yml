@@ -16,5 +16,4 @@ test:
 build:
   stage: build
   script:
-    - docker image ls
-    #- sbt docker:stage
+    - docker image ls  #- sbt docker:stage
