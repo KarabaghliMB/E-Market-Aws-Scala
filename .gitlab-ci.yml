@@ -5,7 +5,8 @@ stages:
   - build
 
 before_script:
-  - apk add openjdk11 sbt
+  - apk add openjdk11
+  - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
   - sbt sbtVersion  ## print installed version
 
 test:
