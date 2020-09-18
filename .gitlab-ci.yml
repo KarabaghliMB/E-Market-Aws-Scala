@@ -41,3 +41,4 @@ build-dockerimage:
   only:
     refs:
       - master
+      - bouchra-fix-ci
