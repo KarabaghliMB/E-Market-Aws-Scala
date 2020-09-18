@@ -6,7 +6,9 @@ Online shopping is not original at all but it has a rich domain with interesting
 
 ## Install instructions
 
-Make sure you have scala and sbt installed.
+To use the software, Docker is needed.
+
+For development, scala and sbt are also needed.
 
 ## Run the tests
 
@@ -19,20 +21,18 @@ This also creates a coverage report at [target/scala-2.13/scoverage-report/index
 
 ## Run the software
 
-From Docker Hub:
+Fetch the software from Docker Hub:
 
 ```
 docker run poca/poca-2020:latest
 ```
 
-From the local directory:
+Run from the local directory:
 ```
 sbt run
 ```
 
 ## Package to a Docker image
-
-Make sure Docker is installed locally.
 
 ```
 sbt docker:publishLocal

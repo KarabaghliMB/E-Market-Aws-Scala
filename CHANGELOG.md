@@ -1,5 +1,6 @@
 # Change log
 
+* [#21](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/21) Publish to Docker Hub (poca/poca-2020)
 * [#19](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/19) Build a Docker image during CI
 * [#18](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/18) Package using Docker
 * [#16](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/16) Add a webserver
