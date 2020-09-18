@@ -1,7 +1,6 @@
 image: docker:19.03.13-dind
 
-stages:
-  #- test
+stages:  # - test
   - build
 
 before_script:
