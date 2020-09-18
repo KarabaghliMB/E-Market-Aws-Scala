@@ -1,19 +1,43 @@
-image: openjdk:11
+image: alpine:latest
 
 stages:
   - test
-
-before_script:
-  - apt-get update -y
-  - apt-get install apt-transport-https -y
-  ## Install SBT
-  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$HTTP_PROXY --recv 642AC823
-  - apt-get update -y
-  - apt-get install sbt -y
-  - sbt sbtVersion  ## print installed version
+  - build-dockerfile
+  - build-dockerimage
 
 test:
   stage: test
   script:
+    - apk add openjdk11
+    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
     - sbt clean coverage test coverageReport
+
+build-dockerfile:
+  stage: build-dockerfile
+  script:
+    - apk add openjdk11
+    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+    - sbt sbtVersion  # print installed version
+    - sbt docker:stage  # package the application
+  artifacts:
+    paths:
+      - target/docker/stage
+    expire_in: 1 hour
+  only:
+    refs:
+      - master
+
+build-dockerimage:
+  stage: build-dockerimage
+  image:
+    name: gcr.io/kaniko-project/executor:debug  # see https://docs.gitlab.com/ce/ci/docker/using_kaniko.html
+    entrypoint: [""]
+  script:
+    # With vanilla docker you would be using:
+    # docker build --tag poca-2020:latest --file target/docker/stage/Dockerfile target/docker/stage
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"https://index.docker.io/v2/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context target/docker/stage --dockerfile target/docker/stage/Dockerfile --destination poca/poca-2020:latest
+  only:
+    refs:
+      - master
