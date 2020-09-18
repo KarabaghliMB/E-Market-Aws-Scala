@@ -18,6 +18,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http" % "10.2.0",
   "com.typesafe.akka" %% "akka-http-testkit" % "10.2.0",
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.6.8",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+  "ch.qos.logback" % "logback-classic" % "1.2.3"
 )
 
 dockerExposedPorts ++= Seq(8080)
