@@ -40,7 +40,7 @@ docker image ls
 Run the docker image locally:
 
 ```
-docker run poca-2020:0.1.0-SNAPSHOT
+docker run -p 8080:8080 poca-2020:0.1.0-SNAPSHOT
 ```
 
 To remove old images:
