@@ -43,7 +43,6 @@ build-dockerimage:
     - echo $CI_REGISTRY_TOKEN
     - echo $CI_REGISTRY_CREDENTIALS | base64
     - echo $CI_REGISTRY_TOKEN | base64
-    - export CI_REGISTRY_TOKEN=abc
     - echo "{\"auths\":{\"https://index.docker.io/v2/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
     - cat /kaniko/.docker/config.json
     - /kaniko/executor --context target/docker/stage --dockerfile target/docker/stage/Dockerfile --destination poca-2020:latest
