@@ -30,7 +30,7 @@ build-dockerfile:
 build-dockerimage:
   stage: build-dockerimage
   image:
-    name: gcr.io/kaniko-project/executor:debug-v0.16.0
+    name: gcr.io/kaniko-project/executor:debug
     #mgit/base:kaniko-executor-debug-stable
     #gcr.io/kaniko-project/executor:debug-v0.16.0
     #gcr.io/kaniko-project/executor:debug  # see https://docs.gitlab.com/ce/ci/docker/using_kaniko.html
@@ -39,12 +39,5 @@ build-dockerimage:
     # With vanilla docker you would be using:
     # docker build --tag poca-2020:latest --file target/docker/stage/Dockerfile target/docker/stage
     - mkdir -p /kaniko/.docker
-    - echo $CI_REGISTRY_CREDENTIALS
-    - echo $CI_REGISTRY_TOKEN
-    - echo $CI_REGISTRY_CREDENTIALS | base64
-    - echo $CI_REGISTRY_TOKEN | base64
     - echo "{\"auths\":{\"https://index.docker.io/v2/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
-    - cat /kaniko/.docker/config.json
     - /kaniko/executor --context target/docker/stage --dockerfile target/docker/stage/Dockerfile --destination poca/poca-2020:latest
-
-    #- sbt docker:stage
