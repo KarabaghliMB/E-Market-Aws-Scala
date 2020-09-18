@@ -1,4 +1,7 @@
-image: docker:19.03.13-dind
+image: docker:latest
+
+services:
+  - docker:dind
 
 stages:
 # - test
