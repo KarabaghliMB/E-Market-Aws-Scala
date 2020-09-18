@@ -1,17 +1,11 @@
-image: openjdk:11
+image: docker:19.03.13-dind
 
 stages:
   - test
   - build
 
 before_script:
-  - apt-get update -y
-  - apt-get install apt-transport-https -y
-  ## Install SBT
-  - echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
-  - apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --keyserver-options http-proxy=$HTTP_PROXY --recv 642AC823
-  - apt-get update -y
-  - apt-get install sbt -y
+  - apk add openjdk11 sbt
   - sbt sbtVersion  ## print installed version
 
 test:
