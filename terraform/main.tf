@@ -5,7 +5,6 @@ The AWS user used by terraform is granted the following policy:
     "Version": "2012-10-17",
     "Statement": [
         {
-            "Sid": "VisualEditor0",
             "Effect": "Allow",
             "Action": [
                 "ec2:Describe*",
@@ -45,7 +44,28 @@ The AWS user used by terraform is granted the following policy:
             ]
         },
         {
-            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::poca-tfstates"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Resource": "arn:aws:s3:::poca-tfstates/poca-2020"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:PutItem",
+                "dynamodb:DeleteItem"
+            ],
+            "Resource": "arn:aws:dynamodb:eu-west-3:182500928202:table/poca-tfstates-locks"
+        },
+        {
             "Effect": "Allow",
             "Action": [
                 "sts:DecodeAuthorizationMessage"
@@ -57,8 +77,11 @@ The AWS user used by terraform is granted the following policy:
 */
 
 terraform {
-  backend "local" {
-    path = "terraform.tfstate"
+  backend "s3" {
+    bucket = "poca-tfstates"
+    key = "poca-2020"
+    region = "eu-west-3"
+    dynamodb_table = "poca-tfstates-locks"
   }
   required_providers {
     aws = {
