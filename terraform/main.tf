@@ -107,7 +107,118 @@ data "aws_ami" "amazon_linux_2" {
  }
 }
 
-resource "aws_instance" "web" {
-  ami = data.aws_ami.amazon_linux_2.id
+
+// EC2 Instance
+
+resource "aws_instance" "ec2_poca" {
+  ami = data.aws_ssm_parameter.ecs_ami.value
   instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.sg_poca.id]
+  subnet_id = aws_subnet.subnet_poca.id
+  iam_instance_profile = aws_iam_instance_profile.ecs_instance_profile.name
+
+  user_data = <<EOF
+#!/bin/bash
+# The cluster this agent should check into.
+echo 'ECS_CLUSTER=${aws_ecs_cluster.poca.name}' >> /etc/ecs/ecs.config
+# Disable privileged containers.
+echo 'ECS_DISABLE_PRIVILEGED=true' >> /etc/ecs/ecs.config
+EOF
+
+  depends_on = [aws_ecs_cluster.poca]
 }
+
+data "aws_ssm_parameter" "ecs_ami" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+}
+
+
+// Cluster
+
+resource "aws_ecs_cluster" "poca" {
+  name = "cluster-poca"
+}
+
+
+// Instance role
+// See https://github.com/trussworks/terraform-aws-ecs-cluster/blob/master/main.tf
+
+resource "aws_iam_instance_profile" "ecs_instance_profile" {
+  name = "ecs_instance_profile"
+  path = "/"
+  role = aws_iam_role.ecs_instance_role.name
+}
+
+resource "aws_iam_role" "ecs_instance_role" {
+  name = "ecs_instance_role"
+  assume_role_policy = data.aws_iam_policy_document.ecs_instance_assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "ecs_instance_assume_role_policy" {
+    statement {
+        actions = ["sts:AssumeRole"]
+
+        principals {
+            type = "Service"
+            identifiers = ["ec2.amazonaws.com"]
+        }
+    }
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_instance_role_attachment" {
+    role = aws_iam_role.ecs_instance_role.name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+
+// Network
+
+resource "aws_vpc" "vpc_poca" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_subnet" "subnet_poca" {
+  vpc_id = aws_vpc.vpc_poca.id
+  cidr_block = "10.0.1.0/24"
+}
+
+resource "aws_eip" "eip_poca" {
+  vpc = true
+}
+
+resource "aws_eip_association" "eip_assoc" {
+  instance_id = aws_instance.ec2_poca.id
+  allocation_id = aws_eip.eip_poca.id
+}
+
+resource "aws_internet_gateway" "gw_poca" {
+  vpc_id = aws_vpc.vpc_poca.id
+}
+
+// Security group
+
+resource "aws_security_group" "sg_poca" {
+  name = "secgroup-poca"
+  vpc_id = aws_vpc.vpc_poca.id
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "HTTP requests from clients"
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+// Task definition
+// ...
+
+// Service
+// ...
