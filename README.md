@@ -8,7 +8,7 @@ Online shopping is not original at all but it has a rich domain with interesting
 
 To use the software, Docker is needed.
 
-For development, scala and sbt are also needed.
+For development, scala, sbt and terraform are also needed.
 
 ## Run the tests
 
@@ -54,4 +54,30 @@ To remove old images:
 
 ```
 docker image prune
+```
+
+## Deployment
+
+In the directory `teraform`, to initialize the project:
+
+```
+terraform init
+```
+
+To plan the deployment:
+
+```
+terraform plan
+```
+
+To deploy:
+
+```
+terraform apply
+```
+
+To destroy:
+
+```
+terraform destroy
 ```
