@@ -1,0 +1,32 @@
+[
+    {
+        "name": "webserver",
+        "image": "poca/poca-2020:latest",
+
+        "memoryReservation": 950,
+
+        "portMappings": [
+            {
+            "containerPort": 8080,
+            "hostPort": 80,
+            "protocol": "tcp"
+            }
+        ],
+
+        "cpu": 1024,
+
+        "essential": true,
+
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-create-group": "true",
+                "awslogs-region": "eu-west-3",
+                "awslogs-group": "webserver",
+                "awslogs-stream-prefix": "ecs-poca"
+            }
+        },
+
+        "privileged": false
+    }
+]

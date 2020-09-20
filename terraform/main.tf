@@ -120,7 +120,7 @@ resource "aws_instance" "ec2_poca" {
   user_data = <<EOF
 #!/bin/bash
 # The cluster this agent should check into.
-echo 'ECS_CLUSTER=${aws_ecs_cluster.poca.name}' >> /etc/ecs/ecs.config
+echo 'ECS_CLUSTER=${aws_ecs_cluster.cluster_poca.name}' >> /etc/ecs/ecs.config
 # Disable privileged containers.
 echo 'ECS_DISABLE_PRIVILEGED=true' >> /etc/ecs/ecs.config
 EOF
@@ -136,12 +136,13 @@ data "aws_ssm_parameter" "ecs_ami" {
 
 // Cluster
 
-resource "aws_ecs_cluster" "poca" {
+resource "aws_ecs_cluster" "cluster_poca" {
   name = "cluster-poca"
 }
 
 
 // Instance role
+// This gives the required permissions to the ECS daemon on the EC2 instance
 // See https://github.com/trussworks/terraform-aws-ecs-cluster/blob/master/main.tf
 
 resource "aws_iam_instance_profile" "ecs_instance_profile" {
@@ -229,8 +230,39 @@ resource "aws_security_group" "sg_poca" {
   }
 }
 
+
 // Task definition
-// ...
+
+resource "aws_ecs_task_definition" "td_poca" {
+  family = "td_poca"
+  container_definitions = file("task_definition_poca.json")
+
+  // IAM role of the Docker container
+  // This is needed for the app to make calls to AWS services (an AWS database for example)
+  //task_role_arn = ...
+
+  // Task execution role of the ECS daemon
+  // This is needed to fetch secrets or log to Cloudwatch for example
+  // See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
+  //execution_role = ...
+
+  network_mode = "bridge"
+}
+
 
 // Service
+
+resource "aws_ecs_service" "service_poca" {
+  name = "service-poca"
+  cluster = aws_ecs_cluster.cluster_poca.id
+  deployment_controller {
+    type = "ECS"
+  }
+  force_new_deployment = true
+  scheduling_strategy = "DAEMON"
+  task_definition = aws_ecs_task_definition.td_poca.arn
+}
+
+
+// Log group
 // ...
