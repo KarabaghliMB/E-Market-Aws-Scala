@@ -4,6 +4,7 @@ stages:
   - test
   - build-dockerfile
   - build-dockerimage
+  - deploy
 
 test:
   stage: test
@@ -38,6 +39,23 @@ build-dockerimage:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
     - /kaniko/executor --context target/docker/stage --dockerfile target/docker/stage/Dockerfile --destination poca/poca-2020:latest
+  only:
+    refs:
+      - master
+
+deploy:
+  stage: deploy
+  script:
+    - apk add curl
+    - mkdir terraform_install
+    - cd terraform_install
+    - curl -OJ https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
+    - unzip terraform_0.13.3_linux_amd64.zip && rm terraform_0.13.3_linux_amd64.zip
+    - mv terraform /usr/bin/terraform
+    - cd ../terraform
+    - export TF_IN_AUTOMATION=1
+    - terraform init -input=false
+    - terraform apply -input=false -auto-approve --var-file=integration.tfvars
   only:
     refs:
       - master
