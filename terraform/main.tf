@@ -172,6 +172,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_attachment" {
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
+/*
 resource "aws_iam_policy" "create_log_groups" {
     name = "ecs_create_log_groups"
     policy = <<EOF
@@ -194,6 +195,7 @@ resource "aws_iam_role_policy_attachment" "create_log_groups_attachement" {
     role = aws_iam_role.ecs_instance_role.name
     policy_arn = aws_iam_policy.create_log_groups.arn
 }
+*/
 
 
 // Network
@@ -288,4 +290,7 @@ resource "aws_ecs_service" "service_poca" {
 
 
 // Log group
-// ...
+resource "aws_cloudwatch_log_group" "poca_web" {
+  name = "poca-web"
+  retention_in_days = 30
+}

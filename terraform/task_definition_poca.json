@@ -1,6 +1,6 @@
 [
     {
-        "name": "webserver",
+        "name": "poca-webserver",
         "image": "poca/poca-2020:latest",
 
         "memoryReservation": 950,
@@ -20,9 +20,8 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-create-group": "true",
                 "awslogs-region": "eu-west-3",
-                "awslogs-group": "webserver",
+                "awslogs-group": "poca-web",
                 "awslogs-stream-prefix": "ecs-poca"
             }
         },
