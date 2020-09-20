@@ -6,12 +6,12 @@ stages:
   - build-dockerimage
   - deploy
 
-test:
-  stage: test
-  script:
-    - apk add openjdk11
-    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-    - sbt clean coverage test coverageReport
+#test:
+#  stage: test
+#  script:
+#    - apk add openjdk11
+#    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+#    - sbt clean coverage test coverageReport
 
 build-dockerfile:
   stage: build-dockerfile
@@ -48,7 +48,7 @@ deploy:
   script:
     - mkdir terraform_install
     - cd terraform_install
-    - wget https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
+    - curl -OJ https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
     - unzip terraform_0.13.3_linux_amd64.zip && rm terraform_0.13.3_linux_amd64.zip
     - mv terraform /usr/bin/terraform
     - cd ../terraform
