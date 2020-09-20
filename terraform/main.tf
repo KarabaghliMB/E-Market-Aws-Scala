@@ -1,6 +1,12 @@
 /*
 The AWS user used by terraform is granted the following policy:
 
+AmazonEC2FullAccess
+IAMFullAccess
+CloudWatchFullAccess
+AmazonECS_FullAccess
+AmazonVPCFullAccess
+
 {
     "Version": "2012-10-17",
     "Statement": [
