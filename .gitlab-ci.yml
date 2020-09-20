@@ -46,9 +46,13 @@ build-dockerimage:
 deploy:
   stage: deploy
   script:
-    - apk add terraform
+    - mkdir terraform_install
+    - cd terraform_install
+    - wget https://releases.hashicorp.com/terraform/0.13.3/terraform_0.13.3_linux_amd64.zip
+    - unzip terraform_0.13.3_linux_amd64.zip && rm terraform_0.13.3_linux_amd64.zip
+    - mv terraform /usr/bin/terraform
+    - cd ../terraform
     - export TF_IN_AUTOMATION=1
-    - cd terraform
     - terraform init -input=false
     - terraform apply -input=false -auto-approve --var-file=integration.tfvars
   only:
