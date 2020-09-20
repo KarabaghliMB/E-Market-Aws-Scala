@@ -33,6 +33,11 @@ data "aws_ami" "amazon_linux_2" {
  }
 }
 
+variable "elastic_ip_allocation_id" {
+  type = string
+  description = "Allocation ID of an Elastic IP to attach to the webserver"
+}
+
 
 // EC2 Instance
 
@@ -112,7 +117,7 @@ resource "aws_subnet" "subnet_poca" {
 
 resource "aws_eip_association" "eip_assoc" {
   instance_id = aws_instance.ec2_poca.id
-  allocation_id = "eipalloc-04a3cdde608032d36"
+  allocation_id = var.elastic_ip_allocation_id
 }
 
 resource "aws_internet_gateway" "gw_poca" {

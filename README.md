@@ -72,19 +72,19 @@ terraform init
 To plan the deployment:
 
 ```
-terraform plan
+terraform plan --var-file=integration.tfvars
 ```
 
 To deploy:
 
 ```
-terraform apply
+terraform apply --var-file=integration.tfvars
 ```
 
 To destroy:
 
 ```
-terraform destroy
+terraform destroy --var-file=integration.tfvars
 ```
 
 ## Logs
