@@ -4,6 +4,7 @@ stages:
   - test
   - build-dockerfile
   - build-dockerimage
+  - deploy
 
 test:
   stage: test
@@ -41,3 +42,17 @@ build-dockerimage:
   only:
     refs:
       - master
+
+deploy:
+  stage: deploy
+  image:
+    name: hashicorp/terraform:light
+  script:
+    - export TF_IN_AUTOMATION=1
+    - cd terraform
+    - terraform init -input=false
+    - terraform apply -input=false -auto-approve --var-file=integration.tfvars
+  only:
+    refs:
+      - master
+      - bouchra-deploy
