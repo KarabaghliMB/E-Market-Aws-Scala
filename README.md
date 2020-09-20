@@ -23,7 +23,7 @@ This also creates a coverage report at [target/scala-2.13/scoverage-report/index
 
 ### Use the software online
 
-Go to http://15.236.171.217/hello
+Go to http://15.236.151.45/hello
 
 ### Run locally using the Docker image from Docker Hub
 

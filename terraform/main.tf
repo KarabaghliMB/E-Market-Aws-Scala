@@ -110,13 +110,9 @@ resource "aws_subnet" "subnet_poca" {
   cidr_block = "10.0.1.0/24"
 }
 
-resource "aws_eip" "eip_poca" {
-  vpc = true
-}
-
 resource "aws_eip_association" "eip_assoc" {
   instance_id = aws_instance.ec2_poca.id
-  allocation_id = aws_eip.eip_poca.id
+  allocation_id = "eipalloc-04a3cdde608032d36"
 }
 
 resource "aws_internet_gateway" "gw_poca" {
