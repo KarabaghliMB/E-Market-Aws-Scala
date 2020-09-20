@@ -21,13 +21,18 @@ This also creates a coverage report at [target/scala-2.13/scoverage-report/index
 
 ## Run the software
 
-Fetch the software from Docker Hub:
+### Use the software online
+
+Go to http://15.236.151.45/hello
+
+### Run locally using the Docker image from Docker Hub
 
 ```
 docker run poca/poca-2020:latest
 ```
 
-Run from the local directory:
+### Run from the local directory
+
 ```
 sbt run
 ```
@@ -67,17 +72,21 @@ terraform init
 To plan the deployment:
 
 ```
-terraform plan
+terraform plan --var-file=integration.tfvars
 ```
 
 To deploy:
 
 ```
-terraform apply
+terraform apply --var-file=integration.tfvars
 ```
 
 To destroy:
 
 ```
-terraform destroy
+terraform destroy --var-file=integration.tfvars
 ```
+
+## Logs
+
+Logs are stored on AWS Cloudwatch: https://eu-west-3.console.aws.amazon.com/cloudwatch/home?region=eu-west-3#logsV2:log-groups/log-group/poca-web/log-events

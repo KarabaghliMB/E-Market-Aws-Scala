@@ -1,5 +1,6 @@
 # Change log
 
+* [#27](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/27) Deploy the software on the AWS cloud
 * [#21](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/21) Publish to Docker Hub (poca/poca-2020)
 * [#19](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/19) Build a Docker image during CI
 * [#18](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/18) Package using Docker
