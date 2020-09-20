@@ -45,9 +45,8 @@ build-dockerimage:
 
 deploy:
   stage: deploy
-  image:
-    name: hashicorp/terraform:light
   script:
+    - apk add terraform
     - export TF_IN_AUTOMATION=1
     - cd terraform
     - terraform init -input=false
