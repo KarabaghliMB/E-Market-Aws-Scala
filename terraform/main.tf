@@ -125,7 +125,8 @@ echo 'ECS_CLUSTER=${aws_ecs_cluster.poca.name}' >> /etc/ecs/ecs.config
 echo 'ECS_DISABLE_PRIVILEGED=true' >> /etc/ecs/ecs.config
 EOF
 
-  depends_on = [aws_ecs_cluster.poca]
+  // Uncomment to allow ssh connection using the key named "debug"
+  //key_name = "debug"
 }
 
 data "aws_ssm_parameter" "ecs_ami" {
@@ -195,6 +196,17 @@ resource "aws_internet_gateway" "gw_poca" {
   vpc_id = aws_vpc.vpc_poca.id
 }
 
+resource "aws_default_route_table" "rt_poca" {
+  default_route_table_id = aws_vpc.vpc_poca.default_route_table_id
+}
+
+resource "aws_route" "route_poca_internet" {
+  route_table_id = aws_default_route_table.rt_poca.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.gw_poca.id
+}
+
+
 // Security group
 
 resource "aws_security_group" "sg_poca" {
@@ -210,7 +222,7 @@ resource "aws_security_group" "sg_poca" {
 
   ingress {
     description = "HTTP requests from clients"
-    from_port = 80
+    from_port = 22 // TODO: remove
     to_port = 80
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
