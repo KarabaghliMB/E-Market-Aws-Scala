@@ -6,12 +6,12 @@ stages:
   - build-dockerimage
   - deploy
 
-#test:
-#  stage: test
-#  script:
-#    - apk add openjdk11
-#    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-#    - sbt clean coverage test coverageReport
+test:
+  stage: test
+  script:
+    - apk add openjdk11
+    - apk add sbt --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
+    - sbt clean coverage test coverageReport
 
 build-dockerfile:
   stage: build-dockerfile
@@ -59,4 +59,3 @@ deploy:
   only:
     refs:
       - master
-      - bouchra-deploy
