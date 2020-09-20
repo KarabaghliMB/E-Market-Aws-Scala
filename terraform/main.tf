@@ -172,6 +172,29 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_attachment" {
     policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
 
+resource "aws_iam_policy" "create_log_groups" {
+    name = "ecs_create_log_groups"
+    policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "create_log_groups_attachement" {
+    role = aws_iam_role.ecs_instance_role.name
+    policy_arn = aws_iam_policy.create_log_groups.arn
+}
+
 
 // Network
 
