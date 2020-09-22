@@ -1,9 +1,9 @@
 
-enablePlugins(JavaAppPackaging)
-enablePlugins(DockerPlugin)
-
-lazy val root = (project in file(".")).
-  settings(
+lazy val root = (project in file("."))
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
+  .enablePlugins(SbtTwirl)
+  .settings(
     inThisBuild(List(
       organization := "com.poca",
       scalaVersion := "2.13.1"
