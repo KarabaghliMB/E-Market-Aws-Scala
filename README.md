@@ -6,9 +6,28 @@ Online shopping is not original at all but it has a rich domain with interesting
 
 ## Install instructions
 
-To use the software, Docker is needed.
+To run the software locally, Docker and postgresql is needed.
 
-For development, scala, sbt and terraform are also needed.
+In addition, scala, sbt and terraform are needed for development.
+
+### Create the database
+
+To connect: `sudo -u postgres psql`
+
+```
+postgres=# create database poca;
+CREATE DATABASE
+postgres=# create user poca with encrypted password 'poca';
+CREATE ROLE
+postgres=# grant all privileges on database poca to poca;
+GRANT
+```
+
+In `pg_hba.conf`, make sure there is a way to connect as poca:
+* `local poca poca md5` to connect using `psql`
+* `host poca poca 127.0.0.1/32 md5` to connect using TCP.
+
+Restart the database. Test the connection with `psql poca poca`.
 
 ## Run the tests
 
