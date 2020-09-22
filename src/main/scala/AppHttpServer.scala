@@ -6,13 +6,14 @@ import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import com.typesafe.scalalogging.LazyLogging
 
-import scala.io.StdIn
 
 object AppHttpServer extends LazyLogging {
 
     def main(args: Array[String]): Unit = {
-        implicit val system = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
-        implicit val executionContext = system.executionContext
+        implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
+        implicit val actorsExecutionContext = actorsSystem.executionContext
+
+        val db = DatabaseInitializer()
 
         val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(Routes.routes)
 
@@ -23,9 +24,9 @@ object AppHttpServer extends LazyLogging {
 
         val waitOnFuture = serverStartedFuture.flatMap(unit => Future.never)
         
-        sys.addShutdownHook { 
-            // cleanup logic
-            // nothing to do for now
+        scala.sys.addShutdownHook { 
+            actorsSystem.terminate()
+            db.close()
         }
 
         Await.ready(waitOnFuture, Duration.Inf)
