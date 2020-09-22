@@ -35,7 +35,7 @@ class RoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest {
 
             contentType should ===(ContentTypes.`text/html(UTF-8)`)
 
-            entityAs[String].length should be(56)
+            entityAs[String].length should be(104)
         }
     }
 }
