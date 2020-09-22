@@ -27,4 +27,15 @@ class RoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest {
             entityAs[String] should ===("<h1>Say hello to akka-http</h1>")
         }
     }
+
+    test("Route GET /signup returns the signup page") {
+        val request = HttpRequest(uri = "/signup")
+        request ~> routesUnderTest ~> check {
+            status should ===(StatusCodes.OK)
+
+            contentType should ===(ContentTypes.`text/html(UTF-8)`)
+
+            entityAs[String].length should be(56)
+        }
+    }
 }
