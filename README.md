@@ -29,6 +29,12 @@ In `pg_hba.conf`, make sure there is a way to connect as poca:
 
 Restart the database. Test the connection with `psql poca poca`.
 
+### Create the tables
+
+```
+sbt "runMain CreateTables"
+```
+
 ## Run the tests
 
 ```
