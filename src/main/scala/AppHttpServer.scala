@@ -13,6 +13,7 @@ object AppHttpServer extends LazyLogging {
         implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
         implicit val actorsExecutionContext = actorsSystem.executionContext
 
+        MyDatabase.initialize("mydb")
         val db = MyDatabase.db
 
         val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(Routes.routes)
