@@ -12,11 +12,16 @@ object CreateTables extends LazyLogging {
 
         val creationFuture: Future[Unit] = Users.createTable
 
-        val successCase: Future[Unit] = creationFuture.map(_ => logger.info("Done creating table Users"))
-        val failureCase: Future[Unit] = creationFuture.failed.map(exc => {
-            logger.error("Could not create table Users: " + exc)
-            exitCode = 1
-        })
+        val successCase: Future[Unit] = creationFuture.
+            map(_ => logger.info("Done creating table Users"))
+
+        val failureCase: Future[Unit] = creationFuture.
+            failed.
+            map(exc => {
+                logger.error("Could not create table Users: " + exc)
+                exitCode = 1
+            }
+        )
 
         val combinedFuture = for {
             _ <- successCase
