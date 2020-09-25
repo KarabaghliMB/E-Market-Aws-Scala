@@ -15,12 +15,16 @@ In addition, scala, sbt and terraform are needed for development.
 To connect: `sudo -u postgres psql`
 
 ```
-postgres=# create database poca;
+postgres=# create database pocatest;
 CREATE DATABASE
-postgres=# create user poca with encrypted password 'poca';
+postgres=# create user pocatest with encrypted password 'pocatest';
 CREATE ROLE
-postgres=# grant all privileges on database poca to poca;
+postgres=# grant all privileges on database pocatest to pocatest;
 GRANT
+postgres=# \connect poca
+You are now connected to database "poca" as user "postgres".
+poca=# alter schema public owner to poca;
+ALTER SCHEMA
 ```
 
 In `pg_hba.conf`, make sure there is a way to connect as poca:
@@ -28,6 +32,8 @@ In `pg_hba.conf`, make sure there is a way to connect as poca:
 * `host poca poca 127.0.0.1/32 md5` to connect using TCP.
 
 Restart the database. Test the connection with `psql poca poca`.
+
+If you plan to run tests, you need to create another database `pocatest`.
 
 ### Create the tables
 
