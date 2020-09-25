@@ -62,6 +62,8 @@ docker run poca/poca-2020:latest
 sbt run
 ```
 
+Then visit `http://localhost:8080/hello`
+
 ## Package to a Docker image
 
 ```
@@ -77,7 +79,7 @@ docker image ls
 Run the docker image locally:
 
 ```
-docker run -p 8080:8080 poca-2020:latest
+docker run --net=host poca-2020:latest
 ```
 
 To remove old images:
