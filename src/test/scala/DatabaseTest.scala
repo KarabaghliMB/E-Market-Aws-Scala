@@ -12,7 +12,9 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
 
     // In principle, mutable objets should not be shared between tests, because tests should be independent from each other. However for performance the connection to the database should not be recreated for each test. Here we prefer to share the database.
     override def beforeAll() {
-        MyDatabase.initialize("myTestDB")
+        val isRunningOnCI = sys.env.getOrElse("CI", "") != ""
+        val configName = if (isRunningOnCI) "myTestDBforCI" else "myTestDB"
+        MyDatabase.initialize(configName)
     }
     override def afterAll() {
         MyDatabase.db.close
