@@ -1,5 +1,14 @@
 image: alpine:latest
 
+services:
+  - postgres:12.2-alpine
+
+variables:
+  POSTGRES_DB: pocatest
+  POSTGRES_USER: pocatest
+  POSTGRES_PASSWORD: "pocatest"
+  POSTGRES_HOST_AUTH_METHOD: trust
+
 stages:
   - test
   - build-dockerfile

@@ -30,3 +30,5 @@ dockerExposedPorts ++= Seq(8080)
 dockerUpdateLatest := true
 //dockerRepository = "[repository.host[:repository.port]]"
 //dockerUsername = ""
+
+mainClass in Compile := Some("AppHttpServer")

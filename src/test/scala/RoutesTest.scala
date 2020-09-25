@@ -28,7 +28,7 @@ class RoutesTest extends AnyFunSuite with Matchers with ScalatestRouteTest {
         }
     }
 
-    test("Route GET /signup returns the signup page") {
+    test("Route GET /signup should returns the signup page") {
         val request = HttpRequest(uri = "/signup")
         request ~> routesUnderTest ~> check {
             status should ===(StatusCodes.OK)
