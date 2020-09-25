@@ -31,4 +31,4 @@ dockerUpdateLatest := true
 //dockerRepository = "[repository.host[:repository.port]]"
 //dockerUsername = ""
 
-mainClass in (Compile, run) := Some("AppHttpServer")
+mainClass in Compile := Some("AppHttpServer")
