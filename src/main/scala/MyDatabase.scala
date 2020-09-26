@@ -4,6 +4,8 @@
     The access to the database is made available as a singleton.
 */
 
+package poca
+
 import slick.jdbc.PostgresProfile.api._
 
 /*
