@@ -1,4 +1,5 @@
 
+import scala.concurrent.Future
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.http.scaladsl.model.{HttpRequest, StatusCodes, ContentTypes, FormData, HttpMethods}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -16,10 +17,10 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
     override def createActorSystem(): akka.actor.ActorSystem =
         testKit.system.classicSystem
 
-    var mockUsers = mock[Users]
-    val routesUnderTest = new Routes(mockUsers).routes
-
     test("Route GET /hello should say hello") {
+        var mockUsers = mock[Users]
+        val routesUnderTest = new Routes(mockUsers).routes
+
         val request = HttpRequest(uri = "/hello")
         request ~> routesUnderTest ~> check {
             status should ===(StatusCodes.OK)
@@ -31,6 +32,9 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
     }
 
     test("Route GET /signup should returns the signup page") {
+        var mockUsers = mock[Users]
+        val routesUnderTest = new Routes(mockUsers).routes
+
         val request = HttpRequest(uri = "/signup")
         request ~> routesUnderTest ~> check {
             status should ===(StatusCodes.OK)
@@ -42,6 +46,11 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
     }
 
     test("Route POST /register should create a new user") {
+        var mockUsers = mock[Users]
+        (mockUsers.createUser _).expects("toto").returning(Future(())).once()
+
+        val routesUnderTest = new Routes(mockUsers).routes
+
         val request = HttpRequest(
             method = HttpMethods.POST,
             uri = "/register",
@@ -50,7 +59,7 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
         request ~> routesUnderTest ~> check {
             status should ===(StatusCodes.OK)
 
-            contentType should ===(ContentTypes.`text/html(UTF-8)`)
+            contentType should ===(ContentTypes.`text/plain(UTF-8)`)
 
             entityAs[String] should ===("Welcome 'toto'! You've just been registered to our great marketplace.")
         }

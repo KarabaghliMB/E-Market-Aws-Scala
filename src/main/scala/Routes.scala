@@ -33,7 +33,7 @@ class Routes(users: Users) extends LazyLogging {
                 userCreation.map(_ => {
                     HttpResponse(
                         StatusCodes.OK,
-                        entity=s"Welcome '$username'!",
+                        entity=s"Welcome '$username'! You've just been registered to our great marketplace.",
                     )
                 }).recover({
                     case exc: UserAlreadyExistsException => {
