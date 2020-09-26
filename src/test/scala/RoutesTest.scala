@@ -64,4 +64,26 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
             entityAs[String] should ===("Welcome 'toto'! You've just been registered to our great marketplace.")
         }
     }
+
+    test("Route POST /register should warn the user when username is already taken") {
+        var mockUsers = mock[Users]
+        (mockUsers.createUser _).expects("toto").returns(Future({
+            throw new UserAlreadyExistsException("")
+        })).once()
+
+        val routesUnderTest = new Routes(mockUsers).routes
+
+        val request = HttpRequest(
+            method = HttpMethods.POST,
+            uri = "/register",
+            entity = FormData(("username", "toto")).toEntity
+        )
+        request ~> routesUnderTest ~> check {
+            status should ===(StatusCodes.OK)
+
+            contentType should ===(ContentTypes.`text/plain(UTF-8)`)
+
+            entityAs[String] should ===("The username 'toto' is already taken. Please choose another username.")
+        }
+    }
 }
