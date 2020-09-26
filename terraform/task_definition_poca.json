@@ -2,9 +2,7 @@
     {
         "name": "poca-webserver",
         "image": "poca/poca-2020:latest",
-
         "memoryReservation": 950,
-
         "portMappings": [
             {
             "containerPort": 8080,
@@ -12,11 +10,8 @@
             "protocol": "tcp"
             }
         ],
-
         "cpu": 1024,
-
         "essential": true,
-
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
@@ -25,7 +20,10 @@
                 "awslogs-stream-prefix": "ecs-poca"
             }
         },
-
-        "privileged": false
+        "privileged": false,
+        "secrets": [{
+            "name": "DB_PASSWORD",
+            "valueFrom": "arn:aws:ssm:eu-west-3:182500928202:parameter/database/password"
+        }]
     }
 ]

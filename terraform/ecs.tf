@@ -4,8 +4,8 @@
 resource "aws_instance" "ec2_poca" {
   ami = data.aws_ssm_parameter.ecs_ami.value
   instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.sg_poca.id]
-  subnet_id = aws_subnet.subnet_poca.id
+  vpc_security_group_ids = [aws_security_group.sg_front.id]
+  subnet_id = aws_subnet.subnet_front.id
   iam_instance_profile = aws_iam_instance_profile.ecs_instance_profile.name
 
   user_data = <<EOF
@@ -78,10 +78,62 @@ resource "aws_ecs_task_definition" "td_poca" {
   // Task execution role of the ECS daemon
   // This is needed to fetch secrets or log to Cloudwatch for example
   // See https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html
-  //execution_role = ...
+  execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
 
   network_mode = "bridge"
 }
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+  name = "ecs-task-execution-role"
+ 
+  assume_role_policy = <<EOF
+{
+ "Version": "2012-10-17",
+ "Statement": [
+   {
+     "Action": "sts:AssumeRole",
+     "Principal": {
+       "Service": "ecs-tasks.amazonaws.com"
+     },
+     "Effect": "Allow",
+     "Sid": ""
+   }
+ ]
+}
+EOF
+}
+
+resource "aws_iam_policy" "access_db_password" {
+  name = "access-db-password"
+
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+        "Action": [
+            "ssm:GetParameters"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+                "arn:aws:ssm:eu-west-3:182500928202:parameter/database/password"     
+            ]
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attach_secrets" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.access_db_password.arn
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_attach_managed_policy" {
+  role = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
 
 
 // Service
