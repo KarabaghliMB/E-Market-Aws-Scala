@@ -9,16 +9,16 @@ final case class UserAlreadyExistsException(private val message: String="", priv
 final case class InconsistentStateException(private val message: String="", private val cause: Throwable=None.orNull)
     extends Exception(message, cause) 
 
-class Users(tag: Tag) extends Table[(String, String)](tag, "users") {
-    def userId = column[String]("userId", O.PrimaryKey)
-    def username = column[String]("username")
-    def * = (userId, username)
-}
+class Users {
+    class UsersTable(tag: Tag) extends Table[(String, String)](tag, "users") {
+        def userId = column[String]("userId", O.PrimaryKey)
+        def username = column[String]("username")
+        def * = (userId, username)
+    }
 
-object Users {
     implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
     val db = MyDatabase.db
-    val users = TableQuery[Users]
+    val users = TableQuery[UsersTable]
 
     def createTable: Future[Unit] = {
         val dbio: DBIO[Unit] = users.schema.create
