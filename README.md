@@ -96,10 +96,16 @@ docker image prune
 
 ## Deployment
 
-In the directory `teraform`, to initialize the project:
+In the directory `terraform`, to initialize the project:
 
 ```
 terraform init
+```
+
+Set the secrets in you shell:
+
+```
+export TF_VAR_db_password="xxx"
 ```
 
 To plan the deployment:
