@@ -21,6 +21,10 @@
             }
         },
         "privileged": false,
+        "environnement": [{
+            "name": "DB_HOST",
+            "value": "${DB_HOST}"
+        }],
         "secrets": [{
             "name": "DB_PASSWORD",
             "valueFrom": "arn:aws:ssm:eu-west-3:182500928202:parameter/database/password"

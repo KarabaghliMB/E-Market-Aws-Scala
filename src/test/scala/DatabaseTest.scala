@@ -7,6 +7,7 @@ import slick.jdbc.meta._
 import org.scalatest.{Matchers, BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.funsuite.AnyFunSuite
 import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes}
 
 
@@ -16,7 +17,8 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     override def beforeAll() {
         val isRunningOnCI = sys.env.getOrElse("CI", "") != ""
         val configName = if (isRunningOnCI) "myTestDBforCI" else "myTestDB"
-        MyDatabase.initialize(configName)
+        val config = ConfigFactory.load().getConfig(configName)
+        MyDatabase.initialize(config)
     }
     override def afterAll() {
         MyDatabase.db.close

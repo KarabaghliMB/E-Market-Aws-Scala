@@ -7,6 +7,7 @@
 package poca
 
 import slick.jdbc.PostgresProfile.api._
+import com.typesafe.config.Config
 
 /*
     It's important to wrap the connection to the database in a singleton Object, because database connections are expensive.
@@ -20,7 +21,7 @@ object MyDatabase {
         After initialization, you can get the member `db` and use it directy.
         At the end, call `db.close`.
     */
-    def initialize(configName: String): Unit = {
-        db = Database.forConfig(configName)
+    def initialize(config: Config): Unit = {
+        db = Database.forConfig(path="", config=config)
     }
 }
