@@ -101,4 +101,20 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
             case None => fail("Should return a user.")
         }
     }
+
+    test("Users.getAllUsers should return a list of users") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("riri")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val createAnotherUserFuture: Future[Unit] = Users.createUser("fifi")
+        Await.ready(createAnotherUserFuture, Duration.Inf)
+
+        val returnedUserSeqFuture: Future[Seq[User]] = Users.getAllUsers()
+        val returnedUserSeq: Seq[User] = Await.result(returnedUserSeqFuture, Duration.Inf)
+
+        returnedUserSeq.length should be(2)
+    }
 }
