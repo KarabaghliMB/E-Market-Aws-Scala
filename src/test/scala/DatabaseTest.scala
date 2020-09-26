@@ -27,13 +27,27 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.createTable should create a table named 'users'") {
-        val createFuture: Future[Unit] = Users.createTable
+        val createTableFuture: Future[Unit] = Users.createTable
 
-        Await.ready(createFuture, Duration.Inf)
+        Await.ready(createTableFuture, Duration.Inf)
 
         val tableRequest = MyDatabase.db.run(MTable.getTables("users"))
         val tableList = Await.result(tableRequest, Duration.Inf)
 
         tableList.length should be(1)
+    }
+
+    test("Users.createUser should create a new user") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val getUsersFuture: Future[Seq[User]] = Users.getAllUsers()
+        var allUsers: Seq[User] = Await.result(getUsersFuture, Duration.Inf)
+
+        allUsers.length should be(1)
+        allUsers.head.username should be("toto")
     }
 }

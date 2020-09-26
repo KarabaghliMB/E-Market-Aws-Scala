@@ -11,11 +11,31 @@ class Users(tag: Tag) extends Table[(String, String)](tag, "users") {
 }
 
 object Users {
+    implicit val executionContext = scala.concurrent.ExecutionContext.Implicits.global
     val db = MyDatabase.db
     val users = TableQuery[Users]
 
     def createTable: Future[Unit] = {
         val dbio: DBIO[Unit] = users.schema.create
         db.run(dbio)
+    }
+
+    def createUser(username: String): Future[Unit] = {
+        val userId = UUID.randomUUID.toString()
+        val newUser = User(userId=userId, username=username)
+
+        val dbio: DBIO[Int] = users += User.unapply(newUser).get
+        var resultFuture: Future[Int] = db.run(dbio)
+
+        // We do not care about the Int value
+        resultFuture.map(_ => ())
+    }
+
+    def getAllUsers(): Future[Seq[User]] = {
+        val userListFuture = db.run(users.result)
+
+        userListFuture.map((userList: Seq[(String, String)]) => {
+            userList.map(User tupled _)
+        })
     }
 }
