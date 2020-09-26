@@ -69,7 +69,7 @@ resource "aws_iam_role_policy_attachment" "ecs_instance_role_attachment" {
 
 resource "aws_ecs_task_definition" "td_poca" {
   family = "td_poca"
-  container_definitions = file("task_definition_poca.json")
+  container_definitions = data.template_file.ecs_template.rendered
 
   // IAM role of the Docker container
   // This is needed for the app to make calls to AWS services (an AWS database for example)
@@ -81,6 +81,14 @@ resource "aws_ecs_task_definition" "td_poca" {
   execution_role_arn = aws_iam_role.ecs_task_execution_role.arn
 
   network_mode = "bridge"
+}
+
+data "template_file" "ecs_template" {
+  template = file("task_definition_poca.json")
+
+  vars = {
+    DB_HOST = aws_db_instance.db_poca.address
+  }
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
