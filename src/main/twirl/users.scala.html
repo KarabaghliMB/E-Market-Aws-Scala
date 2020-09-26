@@ -1,0 +1,15 @@
+@(users: Seq[poca.User])
+
+<!doctype html>
+<html>
+    <head></head>
+
+    <h1>List of registred users</h1>
+
+    <ul>
+    @for(user <- users) {
+        <li>@user.username</li>
+    }
+    </ul>
+        
+</html>
