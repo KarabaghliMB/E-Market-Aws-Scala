@@ -7,6 +7,7 @@ import akka.http.scaladsl.Http
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import com.typesafe.scalalogging.LazyLogging
+import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 
 
 object AppHttpServer extends LazyLogging {
@@ -15,7 +16,20 @@ object AppHttpServer extends LazyLogging {
         implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
         implicit val actorsExecutionContext = actorsSystem.executionContext
 
-        MyDatabase.initialize("mydb")
+        val isRunningOnCloud = sys.env.getOrElse("DB_HOST", "") != ""
+        var rootConfig = ConfigFactory.load()
+        val dbConfig = if (isRunningOnCloud) {
+            val dbHost = sys.env.getOrElse("DB_HOST", "")
+            val dbPassword = sys.env.getOrElse("DB_PASSWORD", "")
+
+            val originalConfig = rootConfig.getConfig("cloudDB")
+            originalConfig.
+                withValue("properties.serverName", ConfigValueFactory.fromAnyRef(dbHost)).
+                withValue("properties.password", ConfigValueFactory.fromAnyRef(dbPassword))
+        } else {
+            rootConfig.getConfig("localDB")
+        }
+        MyDatabase.initialize(dbConfig)
         val db = MyDatabase.db
         var users = new Users()
         val routes = new Routes(users)
