@@ -21,15 +21,37 @@ object Users {
     }
 
     def createUser(username: String): Future[Unit] = {
-        val userId = UUID.randomUUID.toString()
-        val newUser = User(userId=userId, username=username)
-        val newUserAsTuple: (String, String) = User.unapply(newUser).get
+        val existingUsersFuture = getUserByUsername(username)
 
-        val dbio: DBIO[Int] = users += newUserAsTuple
-        var resultFuture: Future[Int] = db.run(dbio)
+        existingUsersFuture.flatMap(existingUsers => {
+            if (existingUsers.isEmpty) {
+                val userId = UUID.randomUUID.toString()
+                val newUser = User(userId=userId, username=username)
+                val newUserAsTuple: (String, String) = User.unapply(newUser).get
 
-        // We do not care about the Int value
-        resultFuture.map(_ => ())
+                val dbio: DBIO[Int] = users += newUserAsTuple
+                var resultFuture: Future[Int] = db.run(dbio)
+
+                // We do not care about the Int value
+                resultFuture.map(_ => ())
+            } else {
+                throw new Exception(s"A user with username '$username' already exists.")
+            }
+        })
+    }
+
+    def getUserByUsername(username: String): Future[Option[User]] = {
+        val query = users.filter(_.username === username)
+
+        val userListFuture = db.run(query.result)
+
+        userListFuture.map((userList: Seq[(String, String)]) => {
+            userList.length match {
+                case 0 => None
+                case 1 => Some(User tupled userList.head)
+                case _ => throw new Exception(s"Inconsistent state : username $username is linked to several users in database!")
+            }
+        })
     }
 
     def getAllUsers(): Future[Seq[User]] = {
