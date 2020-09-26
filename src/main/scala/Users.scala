@@ -23,8 +23,9 @@ object Users {
     def createUser(username: String): Future[Unit] = {
         val userId = UUID.randomUUID.toString()
         val newUser = User(userId=userId, username=username)
+        val newUserAsTuple: (String, String) = User.unapply(newUser).get
 
-        val dbio: DBIO[Int] = users += User.unapply(newUser).get
+        val dbio: DBIO[Int] = users += newUserAsTuple
         var resultFuture: Future[Int] = db.run(dbio)
 
         // We do not care about the Int value
