@@ -6,6 +6,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.scalatest.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalamock.scalatest.MockFactory
+import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes}
 
 
 class RoutesTest extends AnyFunSuite with Matchers with MockFactory with ScalatestRouteTest {
@@ -104,7 +105,7 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
 
             contentType should ===(ContentTypes.`text/html(UTF-8)`)
 
-            entityAs[String].length should be(330)
+            entityAs[String].length should be(203)
         }
     }
 }

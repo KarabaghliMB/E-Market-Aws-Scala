@@ -57,7 +57,7 @@ class Routes(users: Users) extends LazyLogging {
         }
     }
 
-    def getUsers() {
+    def getUsers() = {
         logger.info("I got a request to get user list.")
 
         val userSeqFuture: Future[Seq[User]] = users.getAllUsers()
