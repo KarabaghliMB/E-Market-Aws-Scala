@@ -28,7 +28,7 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.createTable should create a table named 'users'") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val createTableFuture: Future[Unit] = new Users().createTable
 
         Await.ready(createTableFuture, Duration.Inf)
 
@@ -39,16 +39,18 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.createUser should create a new user") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val users: Users = new Users()
+
+        val createTableFuture: Future[Unit] = users.createTable
         Await.ready(createTableFuture, Duration.Inf)
 
-        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
 
         // Check that the future succeeds
         createUserFuture.value should be(Some(Success(())))
 
-        val getUsersFuture: Future[Seq[User]] = Users.getAllUsers()
+        val getUsersFuture: Future[Seq[User]] = users.getAllUsers()
         var allUsers: Seq[User] = Await.result(getUsersFuture, Duration.Inf)
 
         allUsers.length should be(1)
@@ -56,13 +58,15 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.createUser returned future should fail if the user already exists") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val users: Users = new Users()
+
+        val createTableFuture: Future[Unit] = users.createTable
         Await.ready(createTableFuture, Duration.Inf)
 
-        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
 
-        val createDuplicateUserFuture: Future[Unit] = Users.createUser("toto")
+        val createDuplicateUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createDuplicateUserFuture, Duration.Inf)
 
         createDuplicateUserFuture.value match {
@@ -74,26 +78,30 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.getUserByUsername should return no user if it does not exist") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val users: Users = new Users()
+
+        val createTableFuture: Future[Unit] = users.createTable
         Await.ready(createTableFuture, Duration.Inf)
 
-        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
 
-        val returnedUserFuture: Future[Option[User]] = Users.getUserByUsername("somebody-else")
+        val returnedUserFuture: Future[Option[User]] = users.getUserByUsername("somebody-else")
         val returnedUser: Option[User] = Await.result(returnedUserFuture, Duration.Inf)
 
         returnedUser should be(None)
     }
 
     test("Users.getUserByUsername should return a user") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val users: Users = new Users()
+
+        val createTableFuture: Future[Unit] = users.createTable
         Await.ready(createTableFuture, Duration.Inf)
 
-        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
 
-        val returnedUserFuture: Future[Option[User]] = Users.getUserByUsername("toto")
+        val returnedUserFuture: Future[Option[User]] = users.getUserByUsername("toto")
         val returnedUser: Option[User] = Await.result(returnedUserFuture, Duration.Inf)
 
         returnedUser match {
@@ -103,16 +111,18 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.getAllUsers should return a list of users") {
-        val createTableFuture: Future[Unit] = Users.createTable
+        val users: Users = new Users()
+
+        val createTableFuture: Future[Unit] = users.createTable
         Await.ready(createTableFuture, Duration.Inf)
 
-        val createUserFuture: Future[Unit] = Users.createUser("riri")
+        val createUserFuture: Future[Unit] = users.createUser("riri")
         Await.ready(createUserFuture, Duration.Inf)
 
-        val createAnotherUserFuture: Future[Unit] = Users.createUser("fifi")
+        val createAnotherUserFuture: Future[Unit] = users.createUser("fifi")
         Await.ready(createAnotherUserFuture, Duration.Inf)
 
-        val returnedUserSeqFuture: Future[Seq[User]] = Users.getAllUsers()
+        val returnedUserSeqFuture: Future[Seq[User]] = users.getAllUsers()
         val returnedUserSeq: Seq[User] = Await.result(returnedUserSeqFuture, Duration.Inf)
 
         returnedUserSeq.length should be(2)

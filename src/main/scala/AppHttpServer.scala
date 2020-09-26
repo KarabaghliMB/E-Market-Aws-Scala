@@ -15,8 +15,10 @@ object AppHttpServer extends LazyLogging {
 
         MyDatabase.initialize("mydb")
         val db = MyDatabase.db
+        var users = new Users()
+        val routes = new Routes(users)
 
-        val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(Routes.routes)
+        val bindingFuture = Http().newServerAt("0.0.0.0", 8080).bind(routes.routes)
 
         val serverStartedFuture = bindingFuture.map(binding => {
             val address = binding.localAddress

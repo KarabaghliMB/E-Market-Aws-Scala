@@ -10,7 +10,7 @@ object CreateTables extends LazyLogging {
         val db = MyDatabase.db
         var exitCode = 0
 
-        val creationFuture: Future[Unit] = Users.createTable
+        val creationFuture: Future[Unit] = new Users().createTable
 
         val successCase: Future[Unit] = creationFuture.
             map(_ => logger.info("Done creating table Users"))
