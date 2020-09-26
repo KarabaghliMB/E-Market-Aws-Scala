@@ -7,6 +7,7 @@ import slick.jdbc.meta._
 import org.scalatest.{Matchers, BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.funsuite.AnyFunSuite
 import com.typesafe.scalalogging.LazyLogging
+import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes}
 
 
 class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with BeforeAndAfterEach with LazyLogging {

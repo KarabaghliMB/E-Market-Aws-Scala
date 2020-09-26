@@ -6,6 +6,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import org.scalatest.Matchers
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalamock.scalatest.MockFactory
+import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes}
 
 
 class RoutesTest extends AnyFunSuite with Matchers with MockFactory with ScalatestRouteTest {
@@ -84,6 +85,27 @@ class RoutesTest extends AnyFunSuite with Matchers with MockFactory with Scalate
             contentType should ===(ContentTypes.`text/plain(UTF-8)`)
 
             entityAs[String] should ===("The username 'toto' is already taken. Please choose another username.")
+        }
+    }
+
+    test("Route GET /users should display the list of users") {
+        var mockUsers = mock[Users]
+        val userList = List(
+            User(username="riri", userId="id1"),
+            User(username="fifi", userId="id2"),
+            User(username="lulu", userId="id2")
+        )
+        (mockUsers.getAllUsers _).expects().returns(Future(userList)).once()
+
+        val routesUnderTest = new Routes(mockUsers).routes
+
+        val request = HttpRequest(uri = "/users")
+        request ~> routesUnderTest ~> check {
+            status should ===(StatusCodes.OK)
+
+            contentType should ===(ContentTypes.`text/html(UTF-8)`)
+
+            entityAs[String].length should be(203)
         }
     }
 }

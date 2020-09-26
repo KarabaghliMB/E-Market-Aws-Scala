@@ -1,3 +1,6 @@
+
+package poca
+
 import scala.concurrent.Future
 import slick.jdbc.PostgresProfile.api._
 import java.util.UUID

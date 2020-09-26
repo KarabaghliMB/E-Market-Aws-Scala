@@ -1,3 +1,6 @@
+
+package poca
+
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import com.typesafe.scalalogging.LazyLogging
