@@ -1,4 +1,5 @@
 
+import scala.util.{Success, Failure}
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import slick.jdbc.PostgresProfile.api._
@@ -27,13 +28,93 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     }
 
     test("Users.createTable should create a table named 'users'") {
-        val createFuture: Future[Unit] = Users.createTable
+        val createTableFuture: Future[Unit] = Users.createTable
 
-        Await.ready(createFuture, Duration.Inf)
+        Await.ready(createTableFuture, Duration.Inf)
 
         val tableRequest = MyDatabase.db.run(MTable.getTables("users"))
         val tableList = Await.result(tableRequest, Duration.Inf)
 
         tableList.length should be(1)
+    }
+
+    test("Users.createUser should create a new user") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        // Check that the future succeeds
+        createUserFuture.value should be(Some(Success(())))
+
+        val getUsersFuture: Future[Seq[User]] = Users.getAllUsers()
+        var allUsers: Seq[User] = Await.result(getUsersFuture, Duration.Inf)
+
+        allUsers.length should be(1)
+        allUsers.head.username should be("toto")
+    }
+
+    test("Users.createUser returned future should fail if the user already exists") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val createDuplicateUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createDuplicateUserFuture, Duration.Inf)
+
+        createDuplicateUserFuture.value match {
+            case Some(Failure(exc: UserAlreadyExistsException)) => {
+                exc.getMessage should equal ("A user with username 'toto' already exists.")
+            }
+            case _ => fail("The future should fail.")
+        }
+    }
+
+    test("Users.getUserByUsername should return no user if it does not exist") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val returnedUserFuture: Future[Option[User]] = Users.getUserByUsername("somebody-else")
+        val returnedUser: Option[User] = Await.result(returnedUserFuture, Duration.Inf)
+
+        returnedUser should be(None)
+    }
+
+    test("Users.getUserByUsername should return a user") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("toto")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val returnedUserFuture: Future[Option[User]] = Users.getUserByUsername("toto")
+        val returnedUser: Option[User] = Await.result(returnedUserFuture, Duration.Inf)
+
+        returnedUser match {
+            case Some(user) => user.username should be("toto")
+            case None => fail("Should return a user.")
+        }
+    }
+
+    test("Users.getAllUsers should return a list of users") {
+        val createTableFuture: Future[Unit] = Users.createTable
+        Await.ready(createTableFuture, Duration.Inf)
+
+        val createUserFuture: Future[Unit] = Users.createUser("riri")
+        Await.ready(createUserFuture, Duration.Inf)
+
+        val createAnotherUserFuture: Future[Unit] = Users.createUser("fifi")
+        Await.ready(createAnotherUserFuture, Duration.Inf)
+
+        val returnedUserSeqFuture: Future[Seq[User]] = Users.getAllUsers()
+        val returnedUserSeq: Seq[User] = Await.result(returnedUserSeqFuture, Duration.Inf)
+
+        returnedUserSeq.length should be(2)
     }
 }
