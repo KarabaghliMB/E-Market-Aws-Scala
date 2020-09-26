@@ -66,7 +66,7 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
         Await.ready(createDuplicateUserFuture, Duration.Inf)
 
         createDuplicateUserFuture.value match {
-            case Some(Failure(exc: Exception)) => {
+            case Some(Failure(exc: UserAlreadyExistsException)) => {
                 exc.getMessage should equal ("A user with username 'toto' already exists.")
             }
             case _ => fail("The future should fail.")
