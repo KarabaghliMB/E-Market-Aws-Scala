@@ -19,8 +19,6 @@ terraform {
 
 provider "aws" {
   region = "eu-west-3"  # Europe (Paris)
-  access_key = "AKIASU7PHFLFJM76F5UX"
-  secret_key = "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"
 }
 
 data "aws_ami" "amazon_linux_2" {
