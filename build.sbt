@@ -32,4 +32,4 @@ dockerUpdateLatest := true
 //dockerRepository = "[repository.host[:repository.port]]"
 //dockerUsername = ""
 
-mainClass in Compile := Some("AppHttpServer")
+mainClass in Compile := Some("poca.AppHttpServer")

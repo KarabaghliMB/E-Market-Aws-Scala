@@ -38,7 +38,7 @@ If you plan to run tests, you need to create another database `pocatest`.
 ### Create the tables
 
 ```
-sbt "runMain CreateTables"
+sbt "runMain poca.CreateTables"
 ```
 
 ## Run the tests
