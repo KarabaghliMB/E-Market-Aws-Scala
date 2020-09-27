@@ -36,6 +36,7 @@ build-dockerfile:
   only:
     refs:
       - master
+      - carl-fix-deploy
 
 build-dockerimage:
   stage: build-dockerimage
@@ -52,6 +53,7 @@ build-dockerimage:
   only:
     refs:
       - master
+      - carl-fix-deploy
   artifacts:
     paths:
       - image-digest
@@ -74,3 +76,5 @@ deploy:
   only:
     refs:
       - master
+      - carl-fix-deploy
+
