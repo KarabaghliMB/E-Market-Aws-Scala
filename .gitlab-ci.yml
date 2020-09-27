@@ -36,6 +36,7 @@ build-dockerfile:
   only:
     refs:
       - master
+      - carl-fix2
 
 build-dockerimage:
   stage: build-dockerimage
@@ -53,6 +54,7 @@ build-dockerimage:
   only:
     refs:
       - master
+      - carl-fix2
   artifacts:
     paths:
       - builds/michelbl/poca-2020/image-digest/content
@@ -76,3 +78,4 @@ deploy:
   only:
     refs:
       - master
+      - carl-fix2
