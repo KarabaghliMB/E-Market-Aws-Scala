@@ -21,7 +21,7 @@
             }
         },
         "privileged": false,
-        "environnement": [{
+        "environment": [{
             "name": "DB_HOST",
             "value": "${DB_HOST}"
         }],

@@ -72,7 +72,7 @@ resource "aws_ecs_task_definition" "td_poca" {
   container_definitions = data.template_file.ecs_template.rendered
 
   // IAM role of the Docker container
-  // This is needed for the app to make calls to AWS services (an AWS database for example)
+  // This is needed for the app to make calls to AWS services (fetch data from S3 for example)
   //task_role_arn = ...
 
   // Task execution role of the ECS daemon

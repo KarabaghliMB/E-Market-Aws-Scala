@@ -32,7 +32,7 @@ resource "aws_ssm_parameter" "db_password" {
   value = var.db_password
 }
 
-output "db_ip" {
+output "db_address" {
   value = aws_db_instance.db_poca.address
-  description = "IP address of the database"
+  description = "Address of the database"
 }
