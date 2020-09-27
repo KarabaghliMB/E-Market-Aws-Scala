@@ -7,10 +7,17 @@ import akka.http.scaladsl.Http
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import com.typesafe.scalalogging.LazyLogging
+import ch.qos.logback.classic.{Level, Logger}
+import org.slf4j.LoggerFactory
 import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 
 
 object AppHttpServer extends LazyLogging {
+    val rootLogger: Logger = LoggerFactory.getLogger("com").asInstanceOf[Logger]
+    rootLogger.setLevel(Level.INFO)
+    val slickLogger: Logger = LoggerFactory.getLogger("slick").asInstanceOf[Logger]
+    slickLogger.setLevel(Level.INFO)
+
     def initDatabase() = {
         val isRunningOnCloud = sys.env.getOrElse("DB_HOST", "") != ""
         var rootConfig = ConfigFactory.load()
