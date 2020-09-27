@@ -11,11 +11,7 @@ import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 
 
 object AppHttpServer extends LazyLogging {
-
-    def main(args: Array[String]): Unit = {
-        implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
-        implicit val actorsExecutionContext = actorsSystem.executionContext
-
+    def initDatabase() = {
         val isRunningOnCloud = sys.env.getOrElse("DB_HOST", "") != ""
         var rootConfig = ConfigFactory.load()
         val dbConfig = if (isRunningOnCloud) {
@@ -30,7 +26,16 @@ object AppHttpServer extends LazyLogging {
             rootConfig.getConfig("localDB")
         }
         MyDatabase.initialize(dbConfig)
+    }
+
+    def main(args: Array[String]): Unit = {
+        implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
+        implicit val actorsExecutionContext = actorsSystem.executionContext
+
+        initDatabase
         val db = MyDatabase.db
+        new RunMigrations(db)()
+
         var users = new Users()
         val routes = new Routes(users)
 
