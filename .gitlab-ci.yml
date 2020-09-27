@@ -55,13 +55,12 @@ build-dockerimage:
       - master
   artifacts:
     paths:
-      - image-digest/content
+      - builds/michelbl/poca-2020/image-digest/content
     expire_in: 1 hour
 
 deploy:
   stage: deploy
   script:
-    - pwd
     - cat image-digest/content
     - apk add curl
     - mkdir terraform_install
