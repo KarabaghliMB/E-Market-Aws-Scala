@@ -61,7 +61,6 @@ build-dockerimage:
 deploy:
   stage: deploy
   script:
-    - pwd
     - cat image-digest/content
     - apk add curl
     - mkdir terraform_install
@@ -71,7 +70,7 @@ deploy:
     - mv terraform /usr/bin/terraform
     - cd ../terraform
     - export TF_IN_AUTOMATION=1
-    - export TF_VAR_image_digest="@`cat image-digest/content`"
+    - export TF_VAR_image_digest="@`cat ../image-digest/content`"
     - terraform init -input=false
     - terraform apply -input=false -auto-approve --var-file=integration.tfvars
   only:
