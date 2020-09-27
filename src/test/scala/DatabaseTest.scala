@@ -8,10 +8,16 @@ import org.scalatest.{Matchers, BeforeAndAfterAll, BeforeAndAfterEach}
 import org.scalatest.funsuite.AnyFunSuite
 import com.typesafe.scalalogging.LazyLogging
 import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
-import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes}
+import ch.qos.logback.classic.{Level, Logger}
+import org.slf4j.LoggerFactory
+import poca.{MyDatabase, Users, User, UserAlreadyExistsException, Routes, RunMigrations}
 
 
 class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with BeforeAndAfterEach with LazyLogging {
+    val rootLogger: Logger = LoggerFactory.getLogger("com").asInstanceOf[Logger]
+    rootLogger.setLevel(Level.INFO)
+    val slickLogger: Logger = LoggerFactory.getLogger("slick").asInstanceOf[Logger]
+    slickLogger.setLevel(Level.INFO)
 
     // In principle, mutable objets should not be shared between tests, because tests should be independent from each other. However for performance the connection to the database should not be recreated for each test. Here we prefer to share the database.
     override def beforeAll() {
@@ -27,25 +33,12 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     override def beforeEach() {
         val resetSchema = sqlu"drop schema public cascade; create schema public;"
         val resetFuture: Future[Int] = MyDatabase.db.run(resetSchema)
-        Await.ready(resetFuture, Duration.Inf)
-    }
-
-    test("Users.createTable should create a table named 'users'") {
-        val createTableFuture: Future[Unit] = new Users().createTable
-
-        Await.ready(createTableFuture, Duration.Inf)
-
-        val tableRequest = MyDatabase.db.run(MTable.getTables("users"))
-        val tableList = Await.result(tableRequest, Duration.Inf)
-
-        tableList.length should be(1)
+        Await.result(resetFuture, Duration.Inf)
+        new RunMigrations(MyDatabase.db)()
     }
 
     test("Users.createUser should create a new user") {
         val users: Users = new Users()
-
-        val createTableFuture: Future[Unit] = users.createTable
-        Await.ready(createTableFuture, Duration.Inf)
 
         val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
@@ -62,9 +55,6 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
 
     test("Users.createUser returned future should fail if the user already exists") {
         val users: Users = new Users()
-
-        val createTableFuture: Future[Unit] = users.createTable
-        Await.ready(createTableFuture, Duration.Inf)
 
         val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
@@ -83,9 +73,6 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
     test("Users.getUserByUsername should return no user if it does not exist") {
         val users: Users = new Users()
 
-        val createTableFuture: Future[Unit] = users.createTable
-        Await.ready(createTableFuture, Duration.Inf)
-
         val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
 
@@ -97,9 +84,6 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
 
     test("Users.getUserByUsername should return a user") {
         val users: Users = new Users()
-
-        val createTableFuture: Future[Unit] = users.createTable
-        Await.ready(createTableFuture, Duration.Inf)
 
         val createUserFuture: Future[Unit] = users.createUser("toto")
         Await.ready(createUserFuture, Duration.Inf)
@@ -115,9 +99,6 @@ class DatabaseTest extends AnyFunSuite with Matchers with BeforeAndAfterAll with
 
     test("Users.getAllUsers should return a list of users") {
         val users: Users = new Users()
-
-        val createTableFuture: Future[Unit] = users.createTable
-        Await.ready(createTableFuture, Duration.Inf)
 
         val createUserFuture: Future[Unit] = users.createUser("riri")
         Await.ready(createUserFuture, Duration.Inf)

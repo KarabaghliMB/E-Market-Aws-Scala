@@ -23,11 +23,6 @@ class Users {
     val db = MyDatabase.db
     val users = TableQuery[UsersTable]
 
-    def createTable: Future[Unit] = {
-        val dbio: DBIO[Unit] = users.schema.create
-        db.run(dbio)
-    }
-
     def createUser(username: String): Future[Unit] = {
         val existingUsersFuture = getUserByUsername(username)
 
