@@ -57,7 +57,7 @@ build-dockerimage:
       - carl-fix2
   artifacts:
     paths:
-      - builds/michelbl/poca-2020/image-digest/content
+      - /builds/michelbl/poca-2020/image-digest/content
     expire_in: 1 hour
 
 deploy:
