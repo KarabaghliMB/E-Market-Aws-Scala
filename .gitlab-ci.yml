@@ -57,7 +57,7 @@ build-dockerimage:
       - carl-fix2
   artifacts:
     paths:
-      - /builds/michelbl/poca-2020/image-digest/content
+      - image-digest/content
     expire_in: 1 hour
 
 deploy:
@@ -72,7 +72,7 @@ deploy:
     - mv terraform /usr/bin/terraform
     - cd ../terraform
     - export TF_IN_AUTOMATION=1
-    - export TF_VAR_image_digest="@`cat image-digest/content`"
+    - export TF_VAR_image_digest="@`cat ../image-digest/content`"
     - terraform init -input=false
     - terraform apply -input=false -auto-approve --var-file=integration.tfvars
   only:
