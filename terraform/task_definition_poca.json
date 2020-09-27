@@ -1,7 +1,7 @@
 [
     {
         "name": "poca-webserver",
-        "image": "poca/poca-2020:latest",
+        "image": "poca/poca-2020:latest${IMAGE_DIGEST}",
         "memoryReservation": 950,
         "portMappings": [
             {

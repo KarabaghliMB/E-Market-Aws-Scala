@@ -88,7 +88,14 @@ data "template_file" "ecs_template" {
 
   vars = {
     DB_HOST = aws_db_instance.db_poca.address
+    IMAGE_DIGEST = var.image_digest
   }
+}
+
+variable "image_digest" {
+  type = string
+  description = "Digest of the Docker image"
+  default = ""
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
