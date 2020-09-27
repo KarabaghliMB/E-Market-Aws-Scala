@@ -49,7 +49,7 @@ build-dockerimage:
     - mkdir -p /kaniko/.docker
     - echo "{\"auths\":{\"https://index.docker.io/v1/\":{\"auth\":\"`echo -n poca:$CI_REGISTRY_TOKEN | base64`\"}}}" > /kaniko/.docker/config.json
     - mkdir image-digest
-    - echo `pwd`
+    - pwd
     - /kaniko/executor --context target/docker/stage --digest-file image-digest/content --dockerfile target/docker/stage/Dockerfile --destination poca/poca-2020:latest
     - cat image-digest/content
   only:
@@ -58,12 +58,14 @@ build-dockerimage:
       - carl-fix-deploy
   artifacts:
     paths:
-      - image-digest/content
+      - /builds/michelbl/poca-2020/image-digest/content
     expire_in: 1 hour
 
 deploy:
   stage: deploy
   script:
+    - pwd
+    - cat /builds/michelbl/poca-2020/image-digest/content
     - apk add curl
     - mkdir terraform_install
     - cd terraform_install
@@ -72,7 +74,7 @@ deploy:
     - mv terraform /usr/bin/terraform
     - cd ../terraform
     - export TF_IN_AUTOMATION=1
-    - export TF_VAR_image_digest="@`cat image-digest/content`"
+    - export TF_VAR_image_digest="@`cat /builds/michelbl/poca-2020/image-digest/content`"
     - terraform init -input=false
     - terraform apply -input=false -auto-approve --var-file=integration.tfvars
   only:
