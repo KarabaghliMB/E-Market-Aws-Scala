@@ -7,15 +7,18 @@ import akka.http.scaladsl.Http
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
 import com.typesafe.scalalogging.LazyLogging
+import ch.qos.logback.classic.{Level, Logger}
+import org.slf4j.LoggerFactory
 import com.typesafe.config.{ConfigFactory, ConfigValueFactory}
 
 
 object AppHttpServer extends LazyLogging {
+    val rootLogger: Logger = LoggerFactory.getLogger("com").asInstanceOf[Logger]
+    rootLogger.setLevel(Level.INFO)
+    val slickLogger: Logger = LoggerFactory.getLogger("slick").asInstanceOf[Logger]
+    slickLogger.setLevel(Level.INFO)
 
-    def main(args: Array[String]): Unit = {
-        implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
-        implicit val actorsExecutionContext = actorsSystem.executionContext
-
+    def initDatabase() = {
         val isRunningOnCloud = sys.env.getOrElse("DB_HOST", "") != ""
         var rootConfig = ConfigFactory.load()
         val dbConfig = if (isRunningOnCloud) {
@@ -30,7 +33,16 @@ object AppHttpServer extends LazyLogging {
             rootConfig.getConfig("localDB")
         }
         MyDatabase.initialize(dbConfig)
+    }
+
+    def main(args: Array[String]): Unit = {
+        implicit val actorsSystem = ActorSystem(guardianBehavior=Behaviors.empty, name="my-system")
+        implicit val actorsExecutionContext = actorsSystem.executionContext
+
+        initDatabase
         val db = MyDatabase.db
+        new RunMigrations(db)()
+
         var users = new Users()
         val routes = new Routes(users)
 
