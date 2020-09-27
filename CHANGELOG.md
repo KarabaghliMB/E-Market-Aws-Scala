@@ -1,5 +1,6 @@
 # Change log
 
+* [#43](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/30) Allow registration of new users
 * [#27](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/27) Deploy the software on the AWS cloud
 * [#21](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/21) Publish to Docker Hub (poca/poca-2020)
 * [#19](https://gaufre.informatique.univ-paris-diderot.fr/michelbl/poca-2020/issues/19) Build a Docker image during CI
