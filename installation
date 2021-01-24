@@ -1,0 +1,55 @@
+
+faire tourner le logiciel : 
+-----------------------------------------------------------------------------------------------
+#cloner le logiciel
+git clone <lien>
+-----------------------------------------------------------------------------------------------
+# ouvrir le fichier de configuration de postgresql "pg_hba.conf" dans "/etc/postgresql/12/main"
+#mettre les 4 lignes à la fin du fichier 
+
+local poca poca md5
+host poca poca 127.0.0.1/32 md5
+local pocatest pocatest md5
+host pocatest pocatest 127.0.0.1/32 md5
+-----------------------------------------------------------------------------------------------
+#Redemmarer postqresql 
+sudo service postgresql restart
+-----------------------------------------------------------------------------------------------
+Create the database
+
+Pour poca :
+-----------
+postgres=# create database poca;
+CREATE DATABASE
+postgres=# create user poca with encrypted password 'poca';
+CREATE ROLE
+postgres=# grant all privileges on database poca to poca;
+GRANT
+postgres=# \connect poca
+You are now connected to database "poca" as user "postgres".
+poca=# alter schema public owner to poca;
+ALTER SCHEMA
+
+Pour pocatest:
+--------------
+postgres=# create database pocatest;
+CREATE DATABASE
+postgres=# create user pocatest with encrypted password 'pocatest';
+CREATE ROLE
+postgres=# grant all privileges on database pocatest to pocatest;
+GRANT
+postgres=# \connect pocatest
+You are now connected to database "pocatest" as user "postgres".
+poca=# alter schema public owner to pocatest;
+ALTER SCHEMA
+--------------------------------------------------------------------------------------------------
+se positionner dans le dossier poca-2020 
+ouvrir le terminal 
+executer le test suivant:
+$ sbt clean coverage test coverageReport
+si ça passe avec success
+lancer le projet avec 
+$ sbt run             #toujour dans le même repertoire
+
+ouvrir le navigateur:
+http://localhost:8080/hello
